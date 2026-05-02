@@ -22,6 +22,9 @@ public class SceneSequence : MonoBehaviour
     public Animator playerAnimator;
     public Texture2D newCursor;
 
+    public Texture newTexture;
+    public SkinnedMeshRenderer targetRenderer;
+
     public List<string> dialogueLines = new List<string>()
     {
         "You: Hello, how are you feeling?",
@@ -88,6 +91,8 @@ public class SceneSequence : MonoBehaviour
         }
         cameraTransform.position = zoomPoint.position;
         cameraTransform.rotation = zoomPoint.rotation;
+
+        targetRenderer.material.mainTexture = newTexture;
     }
 
 }
