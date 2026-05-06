@@ -13,12 +13,7 @@ public class DialogueManager : MonoBehaviour
     private bool isActive = false;
     public event Action OnDialogueEnd;
 
-    List<string> Patient1 = new List<string>()
-    {
-        "You: Hello, how are you feeling?",
-        "Patient: I’ve been having a tooth ache all week. Please help. ",
-        "You: No worries pal. Open up as wide as you can."
-    };
+ 
 
     void Start()
     {

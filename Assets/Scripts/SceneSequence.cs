@@ -22,10 +22,12 @@ public class SceneSequence : MonoBehaviour
     public Animator playerAnimator;
     public Texture2D newCursor;
 
-    public Texture newTexture;
-    public SkinnedMeshRenderer targetRenderer;
+    private SkinnedMeshRenderer activeRenderer;
+    private Texture activeTexture;
+    public int currentLevel;
 
     public List<string> dialogueLines = new List<string>()
+
     {
         "You: Hello, how are you feeling?",
         "Patient: I’ve been having a tooth ache all week. Please help. ",
@@ -37,11 +39,18 @@ public class SceneSequence : MonoBehaviour
 
         dialogueManager.OnDialogueEnd += HandleDialogueEnd;
 
-        StartCoroutine(PlaySequence());
-
-
     }
 
+    public void StartSequence(List<string> newDialogue)
+    {
+        StopAllCoroutines(); // important to prevent overlap
+
+        dialogueLines = newDialogue;
+
+        lightTransform.position = startPoint.position;
+
+        StartCoroutine(PlaySequence());
+    }
     IEnumerator PlaySequence()
     {
         yield return new WaitForSeconds(4f);
@@ -92,7 +101,14 @@ public class SceneSequence : MonoBehaviour
         cameraTransform.position = zoomPoint.position;
         cameraTransform.rotation = zoomPoint.rotation;
 
-        targetRenderer.material.mainTexture = newTexture;
+        activeRenderer.material.mainTexture = activeTexture;
     }
+
+    public void SetCurrentRenderer(SkinnedMeshRenderer r, Texture t)
+    {
+        activeRenderer = r;
+        activeTexture = t;
+    }
+
 
 }
