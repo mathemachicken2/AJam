@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.InputSystem;
 using System;
+
 public class DialogueManager : MonoBehaviour
 {
     public GameObject dialoguePanel;
@@ -12,6 +13,8 @@ public class DialogueManager : MonoBehaviour
     private Queue<string> lines = new Queue<string>();
     private bool isActive = false;
     public event Action OnDialogueEnd;
+
+
 
  
 

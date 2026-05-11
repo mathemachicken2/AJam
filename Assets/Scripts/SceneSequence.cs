@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
+
 public class SceneSequence : MonoBehaviour
 {
     public Transform lightTransform;
@@ -20,11 +21,13 @@ public class SceneSequence : MonoBehaviour
     public Transform zoomPoint;
     public float cameraMoveDuration = 2f;
     public Animator playerAnimator;
-    public Texture2D newCursor;
+   
 
     private SkinnedMeshRenderer activeRenderer;
     private Texture activeTexture;
     public int currentLevel;
+
+    public ClickerMiniGame clickerMiniGame;
 
     public List<string> dialogueLines = new List<string>()
 
@@ -53,7 +56,7 @@ public class SceneSequence : MonoBehaviour
     }
     IEnumerator PlaySequence()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
 
         while (Vector3.Distance(lightTransform.position, endPoint.position) > 0.01f)
         {
@@ -79,11 +82,7 @@ public class SceneSequence : MonoBehaviour
         {
             playerAnimator.enabled= false;
         }
-
-        if (newCursor != null)
-        {
-            Cursor.SetCursor(newCursor, Vector2.zero, CursorMode.Auto);
-        }
+        
     }
 
     IEnumerator CameraMoveSequence()
@@ -102,12 +101,18 @@ public class SceneSequence : MonoBehaviour
         cameraTransform.rotation = zoomPoint.rotation;
 
         activeRenderer.material.mainTexture = activeTexture;
+        //yield return new WaitForSeconds(0.5f);
+        clickerMiniGame.StartMiniGame();
+
+
     }
 
     public void SetCurrentRenderer(SkinnedMeshRenderer r, Texture t)
     {
         activeRenderer = r;
         activeTexture = t;
+
+       
     }
 
 
