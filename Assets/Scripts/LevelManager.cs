@@ -76,13 +76,6 @@ public class LevelManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (!isTransitioning && Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            StartCoroutine(NextLevelSequence());
-        }
-    }
 
     void SpawnPatient()
     {
