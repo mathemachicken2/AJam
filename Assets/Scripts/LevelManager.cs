@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour
     public Image panelImage;
     public TextMeshProUGUI levelText1;
     public TextMeshProUGUI levelText2;
-    public float fadeDuration = 1f;
+    public float fadeDuration = 3f;
 
 
     public Transform cameraStartPoint;
@@ -33,7 +33,11 @@ public class LevelManager : MonoBehaviour
 
     public List<Texture> levelTextures;
 
-    
+    public Image endFadeImage;
+    public float endFadeDuration = 5f;
+    public string mainMenuSceneName = "MainMenu";
+
+
 
 
 
@@ -113,55 +117,117 @@ public class LevelManager : MonoBehaviour
             StartCoroutine(NextLevelSequence());
         }
     }
+
+    IEnumerator EndGameSequence()
+    {
+        // fade to black
+        endFadeImage.gameObject.SetActive(true);
+
+        Color c = endFadeImage.color;
+        c.a = 0f;
+        endFadeImage.color = c;
+
+        float t = 0f;
+
+        while (t < endFadeDuration)
+        {
+            t += Time.deltaTime;
+
+            c.a = Mathf.Lerp(0f, 1f, t / endFadeDuration);
+            endFadeImage.color = c;
+
+            yield return null;
+        }
+
+        c.a = 1f;
+        endFadeImage.color = c;
+
+        // hold on black screen
+        yield return new WaitForSeconds(5f);
+
+        // load main menu
+        UnityEngine.SceneManagement.SceneManager.LoadScene(mainMenuSceneName);
+    }
     public IEnumerator NextLevelSequence()
     {
         if (currentLevel >= patientPrefabs.Count - 1)
         {
-            Debug.Log("All levels completed!");
+            yield return StartCoroutine(EndGameSequence());
             yield break;
         }
         currentLevel++;
+        
 
         levelPanel.SetActive(true);
         levelText1.text = "The appointment went very well.";
         levelText2.text = "Time for your next patient.";
 
         SetAlpha(0f, 0f, 0f);
-      
-       
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
         float t = 0f;
         while (t < fadeDuration)
         {
-            float a = Mathf.Lerp(0f, 1f, t / fadeDuration);
-            SetAlpha(1f, a, 0f);
-
             t += Time.deltaTime;
+
+            float a = Mathf.Lerp(0f, 1f, t / fadeDuration);
+
+            SetAlpha(a, a, 0f);
+
             yield return null;
         }
 
         SetAlpha(1f, 1f, 0f);
+
         yield return new WaitForSeconds(2f);
+
+        // -------------------------
+        // FADE TEXT2 IN
+        // -------------------------
         t = 0f;
+
         while (t < fadeDuration)
         {
+            t += Time.deltaTime;
+
             float a = Mathf.Lerp(0f, 1f, t / fadeDuration);
+
             SetAlpha(1f, 1f, a);
 
-            t += Time.deltaTime;
             yield return null;
         }
 
         SetAlpha(1f, 1f, 1f);
 
-
-
+        yield return new WaitForSeconds(4f);
         SpawnPatient();
-        yield return StartCoroutine(ResetCamera());
+
+        // -------------------------
+        // FADE EVERYTHING OUT
+        // -------------------------
+        t = 0f;
+
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+
+            float a = Mathf.Lerp(1f, 0f, t / fadeDuration);
+
+            SetAlpha(a, a, a);
+
+            yield return null;
+        }
+        
 
         levelPanel.SetActive(false);
+        SetAlpha(1f, 1f, 1f);
+
+
+       
+        yield return StartCoroutine(ResetCamera());
+
+        
 
         sceneSequence.currentLevel = currentLevel;
         sceneSequence.StartSequence(allDialogues[currentLevel]);
