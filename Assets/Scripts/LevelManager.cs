@@ -45,23 +45,23 @@ public class LevelManager : MonoBehaviour
     {
         new List<string>()
         {
-            "You: Hello, how are you feeling?",
-            "Patient: My tooth hurts a lot.",
-            "You: Let me take a look."
+            "You: Good morning, how are you feeling today?",
+            "Patient: I've had the worst tooth ache all week.. Help me !!! Please please please",
+            "You: No worries, I'll take care of it. Open up wide."
         },
 
         new List<string>()
         {
-            "You: Next patient please.",
-            "Patient: It's getting worse...",
-            "You: We’ll sort it out."
+            "You: Hello, how are you feeling today?",
+            "Patient: I'm scared!!!! Oh my god I haven't been to the dentist in 10 years. What if I need to get a root canal?!! I can't afford that HELP ME",
+            "You: Don't worry, this is going to go super well - I've been practicing for years. You won't feel a thing."
         },
 
         new List<string>()
         {
-            "You: Final patient.",
-            "Patient: Much better now!",
-            "You: Great to hear."
+            "You: Hello, how are you?",
+            "Patient: I'm great! I love coming to the dentist. Can we start?",
+            "You: Yes ...... Open up."
         }
     };
 
@@ -105,7 +105,15 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    IEnumerator NextLevelSequence()
+    public void StartNextLevel()
+    {
+        if (!isTransitioning)
+        {
+            isTransitioning = true;
+            StartCoroutine(NextLevelSequence());
+        }
+    }
+    public IEnumerator NextLevelSequence()
     {
         if (currentLevel >= patientPrefabs.Count - 1)
         {
@@ -122,7 +130,7 @@ public class LevelManager : MonoBehaviour
       
        
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         float t = 0f;
         while (t < fadeDuration)
