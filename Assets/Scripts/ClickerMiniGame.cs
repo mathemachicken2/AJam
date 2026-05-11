@@ -242,6 +242,7 @@ public class ClickerMiniGame : MonoBehaviour
     void Win()
     {
         Debug.Log("LEVEL COMPLETE");
+        bar.gameObject.SetActive(false);
         EndMiniGame();
         isActive = false;
         clickerUIRoot.SetActive(false);
