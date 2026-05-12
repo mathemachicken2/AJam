@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-       
+        AudioManager.Instance.PlayAmbient();
         levelPanel.SetActive(false);
         allDialogues = new List<List<string>>()
     {
@@ -158,6 +158,8 @@ public class LevelManager : MonoBehaviour
         SetAlpha(0f, 0f, 0f);
 
         yield return new WaitForSeconds(0.5f);
+
+        AudioManager.Instance.PlayDoorSound();
 
         float t = 0f;
         while (t < fadeDuration)
