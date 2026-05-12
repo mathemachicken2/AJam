@@ -50,6 +50,8 @@ public class SceneSequence : MonoBehaviour
 
         dialogueLines = newDialogue;
 
+       
+
         lightTransform.position = startPoint.position;
 
         StartCoroutine(PlaySequence());
@@ -87,6 +89,7 @@ public class SceneSequence : MonoBehaviour
 
     IEnumerator CameraMoveSequence()
     {
+        AudioManager.Instance.PlayZoomInSound();
         Vector3 initialPosition = cameraTransform.position;
         Quaternion initialRotation = cameraTransform.rotation;
         float time = 0f;

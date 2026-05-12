@@ -7,12 +7,15 @@ public class MainMenuUI : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject optionsPanel;
 
+
+
     
     public string gameSceneName = "SampleScene";
 
     void Start()
     {
         ShowMainMenu();
+        AudioManager.Instance.StopAmbient();
     }
 
     public void PlayGame()

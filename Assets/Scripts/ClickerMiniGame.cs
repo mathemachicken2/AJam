@@ -40,6 +40,7 @@ public class ClickerMiniGame : MonoBehaviour
     public GameObject bloodParticlePrefab;
 
     public Image damageOverlay;
+    public Image hitOverlay;
 
     private GameObject currentBloodEffect;
 
@@ -52,6 +53,7 @@ public class ClickerMiniGame : MonoBehaviour
         cursorUI.SetActive(false);
 
         damageOverlay.gameObject.SetActive(false);
+        hitOverlay.gameObject.SetActive(false);
     }
 
     public void StartMiniGame()
@@ -140,11 +142,14 @@ public class ClickerMiniGame : MonoBehaviour
 
         if (Mathf.Abs(indicatorX - targetX) <= tolerance)
         {
+            AudioManager.Instance.PlayHitSound();
+
             Debug.Log("Hit!");
 
             hits++;
 
             StartCoroutine(FlashColor(hitColor));
+            StartCoroutine(ShowHitOverlay());
 
             if (hits >= hitsToWin)
             {
@@ -156,6 +161,7 @@ public class ClickerMiniGame : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayMissSound();
             misses++;
             Debug.Log("Miss " + misses);
 
@@ -172,6 +178,51 @@ public class ClickerMiniGame : MonoBehaviour
         }
     }
 
+    IEnumerator ShowHitOverlay()
+    {
+        hitOverlay.gameObject.SetActive(true);
+
+        Color c = hitOverlay.color;
+
+        float maxAlpha = 0.35f;
+
+        // FADE IN
+        float fadeInDuration = 0.05f;
+        float t = 0f;
+
+        while (t < fadeInDuration)
+        {
+            if (!isActive) yield break;
+
+            t += Time.deltaTime;
+
+            c.a = Mathf.Lerp(0f, maxAlpha, t / fadeInDuration);
+            hitOverlay.color = c;
+
+            yield return null;
+        }
+
+        // FADE OUT
+        float fadeOutDuration = 0.25f;
+        t = 0f;
+
+        while (t < fadeOutDuration)
+        {
+            if (!isActive) yield break;
+
+            t += Time.deltaTime;
+
+            c.a = Mathf.Lerp(maxAlpha, 0f, t / fadeOutDuration);
+            hitOverlay.color = c;
+
+            yield return null;
+        }
+
+        c.a = 0f;
+        hitOverlay.color = c;
+
+        hitOverlay.gameObject.SetActive(false);
+    }
     IEnumerator ShowDamageOverlay()
     {
         damageOverlay.gameObject.SetActive(true);
@@ -279,6 +330,9 @@ public class ClickerMiniGame : MonoBehaviour
 
     void GameOver()
     {
+        AudioManager.Instance.PlayGameOverSound();
+    
+        EndMiniGame();
         isActive = false;
         gameOverPanel.SetActive(true);
         cursorUI.SetActive(false);
