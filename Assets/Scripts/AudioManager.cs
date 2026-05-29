@@ -31,13 +31,9 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        PlayAmbient();
     }
 
-    private void Start()
-    {
-        PlayAmbient();
-    }
+    
 
     // Plays looping ambient audio for the whole game
     public void PlayAmbient()
@@ -65,7 +61,7 @@ public class AudioManager : MonoBehaviour
 
     public void StopAmbient()
     {
-        if (ambientSource.isPlaying)
+        if (ambientSource != null && ambientSource.isPlaying)
         {
             ambientSource.Stop();
         }
