@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 
 public class SceneSequence : MonoBehaviour
@@ -29,6 +30,8 @@ public class SceneSequence : MonoBehaviour
 
     public ClickerMiniGame clickerMiniGame;
 
+    public Image instructionPanel;
+
     public List<string> dialogueLines = new List<string>()
 
     {
@@ -38,9 +41,14 @@ public class SceneSequence : MonoBehaviour
     };
     void Start()
     {
+
+        AudioManager.Instance.PlayAmbient();
+
         lightTransform.position=startPoint.position;
 
         dialogueManager.OnDialogueEnd += HandleDialogueEnd;
+
+        instructionPanel.gameObject.SetActive(false);
 
     }
 
@@ -89,6 +97,8 @@ public class SceneSequence : MonoBehaviour
 
     IEnumerator CameraMoveSequence()
     {
+        
+
         AudioManager.Instance.PlayZoomInSound();
         Vector3 initialPosition = cameraTransform.position;
         Quaternion initialRotation = cameraTransform.rotation;
@@ -104,7 +114,12 @@ public class SceneSequence : MonoBehaviour
         cameraTransform.rotation = zoomPoint.rotation;
 
         activeRenderer.material.mainTexture = activeTexture;
-        //yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f);
+        instructionPanel.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(4f);
+        instructionPanel.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
         clickerMiniGame.StartMiniGame();
 
 

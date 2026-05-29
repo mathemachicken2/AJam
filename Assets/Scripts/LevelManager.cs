@@ -114,6 +114,7 @@ public class LevelManager : MonoBehaviour
     IEnumerator EndGameSequence()
     {
         // fade to black
+        yield return new WaitForSeconds(2f); 
         endFadeImage.gameObject.SetActive(true);
 
         Color c = endFadeImage.color;

@@ -46,6 +46,12 @@ public class ClickerMiniGame : MonoBehaviour
 
     public LevelManager levelManager;
 
+    private Renderer currentMouthRenderer;
+
+    public Color hoverColor = new Color(1f, 0.3f, 0.3f);
+
+    private Color originalColor;
+
     void Awake()
     {
         clickerUIRoot.SetActive(false);
@@ -88,6 +94,8 @@ public class ClickerMiniGame : MonoBehaviour
 
         MoveIndicator();
 
+        HandleMouthHover();
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             if (IsMouseOverMouth(out RaycastHit hit))
@@ -97,6 +105,46 @@ public class ClickerMiniGame : MonoBehaviour
         }
     }
 
+    void HandleMouthHover()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.collider.CompareTag("Mouth"))
+            {
+                Renderer rend = hit.collider.GetComponent<Renderer>();
+
+                if (rend != null)
+                {
+                    // switched to a new mouth object
+                    if (currentMouthRenderer != rend)
+                    {
+                        ResetMouthColor();
+
+                        currentMouthRenderer = rend;
+                        originalColor = rend.material.color;
+
+                        rend.material.color = hoverColor;
+                    }
+                }
+
+                return;
+            }
+        }
+
+        // mouse left the mouth
+        ResetMouthColor();
+    }
+
+    void ResetMouthColor()
+    {
+        if (currentMouthRenderer != null)
+        {
+            currentMouthRenderer.material.color = originalColor;
+            currentMouthRenderer = null;
+        }
+    }
     bool IsMouseOverMouth(out RaycastHit hitInfo)
     {
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -287,7 +335,7 @@ public class ClickerMiniGame : MonoBehaviour
 
     IEnumerator WinFadeOut()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         Win();
     }
     void Win()
@@ -325,7 +373,7 @@ public class ClickerMiniGame : MonoBehaviour
 
     void RandomizeSpeed()
     {
-        speed = Random.Range(20f, 100f);
+        speed = Random.Range(40f, 190f);
     }
 
     void GameOver()
